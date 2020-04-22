@@ -141,22 +141,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59245f53aeb1fa43b628cbe775b366b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Floor: {fileID: 5338629756198466559, guid: dfb99a36dc9754e4f92ab8aed3b68428, type: 3}
-  PathH: {fileID: 7626894554904112796, guid: 8a068710328506e428d72cc1e4f35489, type: 3}
-  PathV: {fileID: 5833013447220675851, guid: 712a87408456d064cba4ce01abbfbd3c, type: 3}
-  Turn1: {fileID: 5482317722511718448, guid: 88ffdb70445c3604ab88372d0cb13fb6, type: 3}
-  Turn2: {fileID: 165032030620789302, guid: fb91e8f0f149bb74d85082802a4ba9ae, type: 3}
-  Turn3: {fileID: 3739990632249691260, guid: 52d83f312d7bbcb48aecbbda236a3f3c, type: 3}
-  Turn4: {fileID: 2360220156686503057, guid: 2a182019345cb994885323cd107b4c84, type: 3}
-  EndTop: {fileID: 341908905986342710, guid: 546752366a18fd14d9f702706f5ed622, type: 3}
-  EndBot: {fileID: 4493551758782416858, guid: e6d877582d01c7b4dae8c2b900685751, type: 3}
-  EndRight: {fileID: 5795493783919157424, guid: 045d395f5157e8543a21cf1454c28d3f,
+  Floor: {fileID: 367181256405839596, guid: dfb99a36dc9754e4f92ab8aed3b68428, type: 3}
+  PathH: {fileID: 8540376506685768999, guid: 8a068710328506e428d72cc1e4f35489, type: 3}
+  PathV: {fileID: 5421900026479515842, guid: 712a87408456d064cba4ce01abbfbd3c, type: 3}
+  Turn1: {fileID: 4685722796330807019, guid: 88ffdb70445c3604ab88372d0cb13fb6, type: 3}
+  Turn2: {fileID: 6688983677867282781, guid: fb91e8f0f149bb74d85082802a4ba9ae, type: 3}
+  Turn3: {fileID: 3357501098255739712, guid: 52d83f312d7bbcb48aecbbda236a3f3c, type: 3}
+  Turn4: {fileID: 638650034074418695, guid: 2a182019345cb994885323cd107b4c84, type: 3}
+  EndTop: {fileID: 8941814329247152832, guid: 546752366a18fd14d9f702706f5ed622, type: 3}
+  EndBot: {fileID: 4912745715034183051, guid: e6d877582d01c7b4dae8c2b900685751, type: 3}
+  EndRight: {fileID: 8508415595259405350, guid: 045d395f5157e8543a21cf1454c28d3f,
     type: 3}
-  EndLeft: {fileID: 2933676154524738635, guid: 7e5dc6756869f1a46b265cc7d6a0db2a, type: 3}
-  TTop: {fileID: 8295416259723042445, guid: 09d3a1f2ee1432a46bed8768fbc45b16, type: 3}
-  TBot: {fileID: 4946091136506442686, guid: 24fc7d140d3bedc499236805fa23b77b, type: 3}
-  TLeft: {fileID: 4582725150218614548, guid: 529b4c8dc3fd6124e9cfbf9663ee95a3, type: 3}
-  TRight: {fileID: 5237324181865849347, guid: d13821a05769dee46b40011a77ab31b6, type: 3}
+  EndLeft: {fileID: 2077040857783734541, guid: 7e5dc6756869f1a46b265cc7d6a0db2a, type: 3}
+  TTop: {fileID: 4518445590651788208, guid: 09d3a1f2ee1432a46bed8768fbc45b16, type: 3}
+  TBot: {fileID: 4422335778782704834, guid: 24fc7d140d3bedc499236805fa23b77b, type: 3}
+  TLeft: {fileID: 3842854474254301335, guid: 529b4c8dc3fd6124e9cfbf9663ee95a3, type: 3}
+  TRight: {fileID: 8073840118610943385, guid: d13821a05769dee46b40011a77ab31b6, type: 3}
 --- !u!4 &462775300
 Transform:
   m_ObjectHideFlags: 0

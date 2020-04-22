@@ -5,15 +5,6 @@ using UnityEngine;
 //add tiles to point
 public class MazeGenerator : MonoBehaviour
 {
-
-    public enum WallType
-    {
-        Top,
-        Left,
-        Bottom,
-        Right
-    }
-
     //move to separate file
     public class Point
     {
@@ -21,6 +12,7 @@ public class MazeGenerator : MonoBehaviour
         public int X;
         public int Y;
         //change naming
+        public int TileNum;
         public bool _isCell { get; set; }
         public bool _isVisited { get; set; }
 
@@ -32,8 +24,6 @@ public class MazeGenerator : MonoBehaviour
             _isCell = isCell;
             _isVisited = isVisited;
         }
-
-        
     }
 
 
@@ -64,93 +54,114 @@ public class MazeGenerator : MonoBehaviour
     public Point start;
     public Point finish;
 
-    public Point GetNeighbour(Point point, string NeighbourLocation)
+
+    public void DeclareTile(Point point)
     {
-        switch(NeighbourLocation)
+        int TileDeclare = 0;
+
+        /*
+         *       * - is current cell, Literals are neighbours. This code calculates sum depending on neighbour Point _isCell or not, values for each neighbour are given bellow
+         *       T - 2;
+         *       B - 8;
+         *       L - 4;
+         *       R - 1;
+         *         T
+         *       L * R
+         *         B
+         */        
+        if(_point[point.X, point.Y - 1]._isCell)
         {
-            case "top":
-                return _point[point.X, point.Y - 1];
-            case "bot":
-                return _point[point.X, point.Y + 1];
-            case "left":
-                return _point[point.X - 1, point.Y];
-            case "right":
-                return _point[point.X + 1, point.Y];
-            default:
-                return null;
+            TileDeclare += 2;
         }
+        if(_point[point.X, point.Y + 1]._isCell)
+        {
+            TileDeclare += 8;
+        }
+        if(_point[point.X + 1, point.Y ]._isCell)
+        {
+            TileDeclare += 1;
+        }
+        if(_point[point.X - 1, point.Y]._isCell)
+        {
+            TileDeclare += 4;
+        }
+
+        point.TileNum = TileDeclare;
     }
+
 
     public GameObject PickGameObject(Point point)
     {
-        if (!GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
-        {
-            return PathH;
-        }
+        DeclareTile(point);
 
-        if (GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
-        {
-            return PathV;
-        }
-
-        if (GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
-        {
-            return Turn2;
-        }
-
-        if (!GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
-        {
-            return Turn1;
-        }
-
-        if (GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
-        {
-            return Turn4;
-        }
-
-        if (!GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
-        {
-            return Turn3;
-        }
-
-        if (!GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
-        {
-            return EndBot;
-        }
-
-        if (GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
-        {
-            return EndTop;
-        }
-
-        if (!GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
+        if (point.TileNum == 1)
         {
             return EndLeft;
         }
 
-        if (!GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
+        if (point.TileNum == 2)
+        {
+            return EndTop;
+        }
+
+        if (point.TileNum == 3)
+        {
+            return Turn2;
+        }
+
+        if (point.TileNum == 4)
         {
             return EndRight;
         }
 
-        if (GetNeighbour(point, "top")._isCell && !GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
+        if (point.TileNum == 5)
+        {
+            return PathH;
+        }
+
+        if (point.TileNum == 6)
+        {
+            return Turn4;
+        }
+
+        if (point.TileNum == 7)
         {
             return TBot;
         }
 
-        if (!GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
+        if (point.TileNum == 8)
+        {
+            return EndBot;
+        }
+
+        if (point.TileNum == 9)
+        {
+            return Turn1;
+        }
+
+        if (point.TileNum == 10)
+        {
+            return PathV;
+        }
+
+        if (point.TileNum == 11)
+        {
+            return TRight;
+        }
+
+        if (point.TileNum == 12)
+        {
+            return Turn3;
+        }
+
+        if (point.TileNum == 13)
         {
             return TTop;
         }
 
-        if (GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && GetNeighbour(point, "left")._isCell && !GetNeighbour(point, "right")._isCell)
+        if (point.TileNum == 14)
         {
             return TLeft;
-        }
-
-        if (GetNeighbour(point, "top")._isCell && GetNeighbour(point, "bot")._isCell && !GetNeighbour(point, "left")._isCell && GetNeighbour(point, "right")._isCell)
-        {
-            return TRight;
         }
 
         else return Floor;
