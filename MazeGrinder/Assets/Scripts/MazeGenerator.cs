@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//add tiles to point
 public class MazeGenerator : MonoBehaviour
 {
-    //move to separate file
     public class Point
     {
         public Vector2 Possition;
         public int X;
         public int Y;
-        //change naming
         public int TileNum;
         public bool _isCell { get; set; }
         public bool _isVisited { get; set; }
@@ -25,8 +22,6 @@ public class MazeGenerator : MonoBehaviour
             _isVisited = isVisited;
         }
     }
-
-
 
     public GameObject Floor;
     public GameObject PathH;
@@ -43,13 +38,15 @@ public class MazeGenerator : MonoBehaviour
     public GameObject TBot;
     public GameObject TLeft;
     public GameObject TRight;
-    //change naming
+    public GameObject XTurn;
+    public GameObject Finish;
+    public GameObject Temp;
     public Point[,] _point;
     private int _width;
     private int _height;
     public Stack<Point> _path = new Stack<Point>();
     public List<Point> _visited = new List<Point>();
-    //try to move to point 
+    public List<Point> _solve = new List<Point>();
     public List<Point> _neighbours = new List<Point>();
     public Point start;
     public Point finish;
@@ -164,22 +161,23 @@ public class MazeGenerator : MonoBehaviour
             return TLeft;
         }
 
+        if (point.TileNum == 15)
+        {
+            return XTurn;
+        }
+
         else return Floor;
     }
 
     public void MazeGeneratorr()
     {
-
-        //move to global
-        _width = 15;
-        _height = 15;
+        _width = 35;
+        _height = 35;
         start = new Point(1, 1, true, true);
-        //what is the magic number?
-        finish = new Point(_width - 3, _height - 3, true, true);
+        finish = new Point(_width - 2, _height - 2, true, true);
         _point = new Point[_width, _height];
         for (var i = 0; i < _width; i++)
             for (var j = 0; j < _height; j++)
-                //weird bool - rename
                 if ((i % 2 != 0 && j % 2 != 0) && (i < _width - 1 && j < _height - 1))
                 {
                     _point[i, j] = new Point(i, j);
@@ -194,6 +192,11 @@ public class MazeGenerator : MonoBehaviour
         CreateMaze();
 
         SpawnMaze();
+
+        Vector3 myPos = new Vector3(start.X, start.Y, -1);
+        Instantiate(Finish, myPos, Quaternion.identity);
+
+        SolveMaze();
     }
 
     private void CreateMaze()
@@ -224,7 +227,6 @@ public class MazeGenerator : MonoBehaviour
         for (int i = 0; i < _width; i++)
             for (int j = 0; j < _height; j++)
             {
-                // path
                 if (_point[i, j]._isCell)
                 {
 
@@ -232,19 +234,11 @@ public class MazeGenerator : MonoBehaviour
                     Instantiate(PickGameObject(_point[i,j]), myPos, Quaternion.identity);
 
                 }
-                else
-                {
-                    Vector2 myPos = new Vector2(_point[i, j].X, _point[i, j].Y);
-                    Instantiate(Floor, myPos, Quaternion.identity);
-                }
-
             }
     }
 
-    //move to point
     private void GetNeighbours(Point curretnCell)
     {
-        //move cal to point
         int x = curretnCell.X;
         int y = curretnCell.Y;
         const int distance = 2;
@@ -258,7 +252,6 @@ public class MazeGenerator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             Point curNeighbour = possibleNeighbours[i];
-            //move calc to point
             if (curNeighbour.X > 0 && curNeighbour.X < _width && curNeighbour.Y > 0 && curNeighbour.Y < _height)
             {
                 if (_point[curNeighbour.X, curNeighbour.Y]._isCell && !_point[curNeighbour.X, curNeighbour.Y]._isVisited)
@@ -270,7 +263,6 @@ public class MazeGenerator : MonoBehaviour
 
     }
 
-    //possible move to point
     private Point ChooseNeighbour(List<Point> neighbours)
     {
         int r = Random.Range(0, neighbours.Count);
@@ -308,15 +300,92 @@ public class MazeGenerator : MonoBehaviour
         _point[second.X, second.Y] = second;
     }
 
+    public void SolveMaze()
+    {
+        bool flag = false;
+        foreach (Point p in _point)
+        {
+            if (_point[p.X, p.Y]._isCell == true)
+            {
+                _point[p.X, p.Y]._isVisited = false;
+            }
+        }
+        _path.Clear();
+        _path.Push(start);
+        while (_path.Count != 0)
+        {
+            if (_path.Peek().X == finish.X && _path.Peek().Y == finish.Y)
+            {
+                flag = true;
+            }
+            if (!flag)
+            {
+                _neighbours.Clear();
+                GetNeighboursSolve(_path.Peek());
+                if (_neighbours.Count != 0)
+                {
+                    Point nextCell = ChooseNeighbour(_neighbours);
+                    nextCell._isVisited = true;
+                    _point[nextCell.X, nextCell.Y]._isVisited = true;
+                    _path.Push(nextCell);
+                    _visited.Add(_path.Peek());
+                }
+                else
+                {
+                    _path.Pop();
+                }
+            }
+            else
+            {
+                _solve.Add(_path.Peek());
+                _path.Pop();
+            }
+        }
+    }
+
+    private void GetNeighboursSolve(Point localcell)
+    {
+        int x = localcell.X;
+        int y = localcell.Y;
+        const int distance = 1;
+        Point[] possibleNeighbours = new[]
+        {
+                new Point(x, y - distance),
+                new Point(x + distance, y),
+                new Point(x, y + distance),
+                new Point(x - distance, y)
+            };
+        for (int i = 0; i < 4; i++)
+        {
+            Point curNeighbour = possibleNeighbours[i];
+            if (curNeighbour.X > 0 && curNeighbour.X < _width && curNeighbour.Y > 0 && curNeighbour.Y < _height)
+            {
+                if (_point[curNeighbour.X, curNeighbour.Y]._isCell && !_point[curNeighbour.X, curNeighbour.Y]._isVisited)
+                {
+                    _neighbours.Add(curNeighbour);
+                }
+            }
+        }
+    }
+
+    int iter = 0;
     // Start is called before the first frame update
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 5;
         MazeGeneratorr();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (iter < _solve.Count)
+        {
+            Destroy(GameObject.FindWithTag("Player"));
+            Vector3 myPos = new Vector3(_solve[iter].X, _solve[iter].Y, -1);
+            Instantiate(Temp, myPos, Quaternion.identity);
+            iter++;
+        }
     }
 }

@@ -157,6 +157,9 @@ MonoBehaviour:
   TBot: {fileID: 4422335778782704834, guid: 24fc7d140d3bedc499236805fa23b77b, type: 3}
   TLeft: {fileID: 3842854474254301335, guid: 529b4c8dc3fd6124e9cfbf9663ee95a3, type: 3}
   TRight: {fileID: 8073840118610943385, guid: d13821a05769dee46b40011a77ab31b6, type: 3}
+  XTurn: {fileID: 7224443531912434965, guid: d1ed1ae3c259fc541a5261b551caf272, type: 3}
+  Finish: {fileID: 4570875760394675986, guid: a830fb15581ca584f8d494e4b5c56ee9, type: 3}
+  Temp: {fileID: 7297508807783934615, guid: babe67ffe670bdd42baccefb13210fa2, type: 3}
 --- !u!4 &462775300
 Transform:
   m_ObjectHideFlags: 0
@@ -223,7 +226,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.980993
+  orthographic size: 18.830242
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -247,7 +250,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.1, y: 7.2, z: -10}
+  m_LocalPosition: {x: 14.9, y: 17.2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
