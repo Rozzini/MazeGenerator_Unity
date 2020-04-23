@@ -12,6 +12,7 @@ public class MazeGenerator : MonoBehaviour
         public int TileNum;
         public bool _isCell { get; set; }
         public bool _isVisited { get; set; }
+        public bool _isGoodNeighbour;
 
         public Point(int x, int y, bool isVisited = false, bool isCell = true)
         {
@@ -20,6 +21,14 @@ public class MazeGenerator : MonoBehaviour
             Y = y;
             _isCell = isCell;
             _isVisited = isVisited;
+        }
+
+        public bool GetInfo()
+        {
+            if (this._isCell && !this._isVisited)
+                return true;
+            else
+                return false;
         }
     }
 
@@ -42,8 +51,8 @@ public class MazeGenerator : MonoBehaviour
     public GameObject Finish;
     public GameObject Temp;
     public Point[,] _point;
-    private int _width;
-    private int _height;
+    private int Width;
+    private int Height;
     public Stack<Point> _path = new Stack<Point>();
     public List<Point> _visited = new List<Point>();
     public List<Point> _solve = new List<Point>();
@@ -90,95 +99,57 @@ public class MazeGenerator : MonoBehaviour
     public GameObject PickGameObject(Point point)
     {
         DeclareTile(point);
-
-        if (point.TileNum == 1)
+        switch(point.TileNum)
         {
-            return EndLeft;
+            case 1:
+                return EndLeft; 
+            case 2:
+                return EndTop; 
+            case 3:
+                return Turn2;
+            case 4:
+                return EndRight; 
+            case 5:
+                return PathH; 
+            case 6:
+                return Turn4; 
+            case 7:
+                return TBot; 
+            case 8:
+                return EndBot; 
+            case 9:
+                return Turn1; 
+            case 10:
+                return PathV; 
+            case 11:
+                return TRight;
+            case 12:
+                return Turn3;
+            case 13:
+                return TTop;
+            case 14:
+                return TLeft;
+            case 15:
+                return XTurn;
+            default:
+                return Floor; 
         }
-
-        if (point.TileNum == 2)
-        {
-            return EndTop;
-        }
-
-        if (point.TileNum == 3)
-        {
-            return Turn2;
-        }
-
-        if (point.TileNum == 4)
-        {
-            return EndRight;
-        }
-
-        if (point.TileNum == 5)
-        {
-            return PathH;
-        }
-
-        if (point.TileNum == 6)
-        {
-            return Turn4;
-        }
-
-        if (point.TileNum == 7)
-        {
-            return TBot;
-        }
-
-        if (point.TileNum == 8)
-        {
-            return EndBot;
-        }
-
-        if (point.TileNum == 9)
-        {
-            return Turn1;
-        }
-
-        if (point.TileNum == 10)
-        {
-            return PathV;
-        }
-
-        if (point.TileNum == 11)
-        {
-            return TRight;
-        }
-
-        if (point.TileNum == 12)
-        {
-            return Turn3;
-        }
-
-        if (point.TileNum == 13)
-        {
-            return TTop;
-        }
-
-        if (point.TileNum == 14)
-        {
-            return TLeft;
-        }
-
-        if (point.TileNum == 15)
-        {
-            return XTurn;
-        }
-
-        else return Floor;
+        
     }
 
     public void MazeGeneratorr()
     {
-        _width = 35;
-        _height = 35;
+        Width = 35;
+        Height = 35;
         start = new Point(1, 1, true, true);
-        finish = new Point(_width - 2, _height - 2, true, true);
-        _point = new Point[_width, _height];
-        for (var i = 0; i < _width; i++)
-            for (var j = 0; j < _height; j++)
-                if ((i % 2 != 0 && j % 2 != 0) && (i < _width - 1 && j < _height - 1))
+        finish = new Point(Width - 2, Height - 2, true, true);
+        _point = new Point[Width, Height];
+        for (var i = 0; i < Width; i++)
+            for (var j = 0; j < Height; j++)
+            {
+                bool _isOdd = (bool)(i % 2 != 0 && j % 2 != 0);
+                bool _isInBounds = (bool)(i < Width - 1 && j < Height - 1);
+                if (_isOdd && _isInBounds)
                 {
                     _point[i, j] = new Point(i, j);
                 }
@@ -186,6 +157,7 @@ public class MazeGenerator : MonoBehaviour
                 {
                     _point[i, j] = new Point(i, j, false, false);
                 }
+            }
         _path.Push(start);
         _point[start.X, start.Y] = start;
 
@@ -224,8 +196,8 @@ public class MazeGenerator : MonoBehaviour
 
     public void SpawnMaze()
     {
-        for (int i = 0; i < _width; i++)
-            for (int j = 0; j < _height; j++)
+        for (int i = 0; i < Width; i++)
+            for (int j = 0; j < Height; j++)
             {
                 if (_point[i, j]._isCell)
                 {
@@ -252,7 +224,7 @@ public class MazeGenerator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             Point curNeighbour = possibleNeighbours[i];
-            if (curNeighbour.X > 0 && curNeighbour.X < _width && curNeighbour.Y > 0 && curNeighbour.Y < _height)
+            if (curNeighbour.X > 0 && curNeighbour.X < Width && curNeighbour.Y > 0 && curNeighbour.Y < Height)
             {
                 if (_point[curNeighbour.X, curNeighbour.Y]._isCell && !_point[curNeighbour.X, curNeighbour.Y]._isVisited)
                 {
@@ -276,23 +248,10 @@ public class MazeGenerator : MonoBehaviour
         int XAddCoords = 0;
         int YAddCoords = 0;
 
-        if (XDifference == 0)
-        {
-            XAddCoords = 0;
-        }
-        else
-        {
-            XAddCoords = XDifference / Mathf.Abs(XDifference);
-        }
+        XAddCoords = (XDifference == 0) ? 0 : ( XDifference / Mathf.Abs(XDifference));
 
-        if (YDifference == 0)
-        {
-            YAddCoords = 0;
-        }
-        else
-        {
-            YAddCoords = YDifference / Mathf.Abs(YDifference);
-        }
+        YAddCoords = (YDifference == 0) ? 0 : ( YDifference / Mathf.Abs(YDifference));
+        
 
         _point[first.X + XAddCoords, first.Y + YAddCoords]._isCell = true;
         _point[first.X + XAddCoords, first.Y + YAddCoords]._isVisited = true;
@@ -300,40 +259,57 @@ public class MazeGenerator : MonoBehaviour
         _point[second.X, second.Y] = second;
     }
 
+
+    public bool Compare(Point point1, Point point2)
+    {
+        if (point1.X == point2.X && point1.Y == point2.Y)
+            return true;
+        else
+            return false;
+    }
+
+    public void SolvationMechanism()
+    {
+        _neighbours.Clear();
+        GetNeighboursSolve(_path.Peek());
+        if (_neighbours.Count != 0)
+        {
+            Point nextCell = ChooseNeighbour(_neighbours);
+            nextCell._isVisited = true;
+            _point[nextCell.X, nextCell.Y]._isVisited = true;
+            _path.Push(nextCell);
+            _visited.Add(_path.Peek());
+        }
+        else
+        {
+            _path.Pop();
+        }
+    }
+
     public void SolveMaze()
     {
-        bool flag = false;
+        bool FinishFlag = false;
         foreach (Point p in _point)
         {
-            if (_point[p.X, p.Y]._isCell == true)
+            if (p._isCell == true)
             {
-                _point[p.X, p.Y]._isVisited = false;
+               p._isVisited = false;
             }
         }
+
         _path.Clear();
         _path.Push(start);
+
+
         while (_path.Count != 0)
         {
-            if (_path.Peek().X == finish.X && _path.Peek().Y == finish.Y)
+            if (Compare(_path.Peek(), finish))
             {
-                flag = true;
+                FinishFlag = true;
             }
-            if (!flag)
+            if (!FinishFlag)
             {
-                _neighbours.Clear();
-                GetNeighboursSolve(_path.Peek());
-                if (_neighbours.Count != 0)
-                {
-                    Point nextCell = ChooseNeighbour(_neighbours);
-                    nextCell._isVisited = true;
-                    _point[nextCell.X, nextCell.Y]._isVisited = true;
-                    _path.Push(nextCell);
-                    _visited.Add(_path.Peek());
-                }
-                else
-                {
-                    _path.Pop();
-                }
+                SolvationMechanism();
             }
             else
             {
@@ -358,9 +334,9 @@ public class MazeGenerator : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             Point curNeighbour = possibleNeighbours[i];
-            if (curNeighbour.X > 0 && curNeighbour.X < _width && curNeighbour.Y > 0 && curNeighbour.Y < _height)
+            if (curNeighbour.X > 0 && curNeighbour.X < Width && curNeighbour.Y > 0 && curNeighbour.Y < Height)
             {
-                if (_point[curNeighbour.X, curNeighbour.Y]._isCell && !_point[curNeighbour.X, curNeighbour.Y]._isVisited)
+                if (_point[curNeighbour.X, curNeighbour.Y].GetInfo())
                 {
                     _neighbours.Add(curNeighbour);
                 }
@@ -369,7 +345,7 @@ public class MazeGenerator : MonoBehaviour
     }
 
     int iter = 0;
-    // Start is called before the first frame update
+    
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -377,7 +353,6 @@ public class MazeGenerator : MonoBehaviour
         MazeGeneratorr();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (iter < _solve.Count)
